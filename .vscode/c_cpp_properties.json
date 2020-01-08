@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "gcc-x86",
+            "compilerPath": "C:/Program Files (x86)/Atollic/TrueSTUDIO for STM32 9.0.1/ARMTools/bin/arm-atollic-eabi-gcc.exe",
+            "cStandard": "c11"
+        },
+        {
+            "name": "STM32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Core/Inc",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F1xx/Include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "gcc-x86",
+            "cStandard": "c11",
+            "compilerPath": "C:/Program Files (x86)/Atollic/TrueSTUDIO for STM32 9.0.1/ARMTools/bin/arm-atollic-eabi-gcc.exe"
+        }
+    ],
+    "version": 4
+}
