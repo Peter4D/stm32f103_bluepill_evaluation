@@ -1,0 +1,3 @@
+[submodule "extSource"]
+	path = extSource
+	url = http://rdegitlab.gorenje.si/hot/common_sw_package/common_sw_pack.git

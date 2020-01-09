@@ -25,6 +25,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ring_buffer.h"
+
+#include <string.h>
+#include "num_str_convert.h"
 
 /* USER CODE END Includes */
 
@@ -57,6 +61,12 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+static ringBuff_t ringBuffer_test;
+static uint8_t buffer_data[32]; // size need to be power of 2
+
+/* #debug */
+static uint8_t x = 0;
+
 /* USER CODE END 0 */
 
 /**
@@ -67,6 +77,11 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   static uint32_t task_1_lastTick = 0;
+  static uint32_t upCnt = 0;
+
+  static uint8_t serial_msg[30];
+  static uint8_t num_str[10];
+  static uint8_t serial_msg_len;
 
   /* USER CODE END 1 */
   
@@ -77,6 +92,12 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+    RingBuff_init(&ringBuffer_test, buffer_data, sizeof(buffer_data));
+    RingBuff.push(&ringBuffer_test, 'a');
+    RingBuff.push(&ringBuffer_test, 'b');
+    RingBuff.push(&ringBuffer_test, 'c');
+
+    x = RingBuff.get_nBytes(&ringBuffer_test);
 
   /* USER CODE END Init */
 
@@ -103,6 +124,16 @@ int main(void)
         task_1_lastTick = HAL_GetTick();
 
         HAL_GPIO_TogglePin(LED_PC13_GPIO_Port, LED_PC13_Pin);
+        upCnt++;
+
+        
+        strcpy(serial_msg, "upTime in seconds: ");
+        num2str(upCnt, num_str);
+        strcat(serial_msg, num_str);
+        strcat(serial_msg, "\n\r");
+        
+        serial_msg_len = strlen(serial_msg);
+        HAL_UART_Transmit_IT(&huart1, serial_msg, serial_msg_len);
     } 
 
     /* USER CODE BEGIN 3 */

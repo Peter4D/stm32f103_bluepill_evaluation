@@ -42,7 +42,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define TASK_1_PER      200
+#define TASK_1_PER      1000
 
 /* USER CODE END EC */
 
