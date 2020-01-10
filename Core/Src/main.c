@@ -30,6 +30,8 @@
 #include <string.h>
 #include "num_str_convert.h"
 
+#include "Serial.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,11 +63,11 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-static ringBuff_t ringBuffer_test;
-static uint8_t buffer_data[32]; // size need to be power of 2
+// static ringBuff_t ringBuffer_test;
+// static uint8_t buffer_data[32]; // size need to be power of 2
 
 /* #debug */
-static uint8_t x = 0;
+// static uint8_t x = 0;
 
 /* USER CODE END 0 */
 
@@ -92,12 +94,12 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-    RingBuff_init(&ringBuffer_test, buffer_data, sizeof(buffer_data));
-    RingBuff.push(&ringBuffer_test, 'a');
-    RingBuff.push(&ringBuffer_test, 'b');
-    RingBuff.push(&ringBuffer_test, 'c');
+    // RingBuff_init(&ringBuffer_test, buffer_data, sizeof(buffer_data));
+    // RingBuff.push(&ringBuffer_test, 'a');
+    // RingBuff.push(&ringBuffer_test, 'b');
+    // RingBuff.push(&ringBuffer_test, 'c');
 
-    x = RingBuff.get_nBytes(&ringBuffer_test);
+    // x = RingBuff.get_nBytes(&ringBuffer_test);
 
   /* USER CODE END Init */
 
@@ -112,6 +114,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  Serial_init(&serial_0_desc, &huart1);
 
   /* USER CODE END 2 */
 
@@ -126,14 +129,22 @@ int main(void)
         HAL_GPIO_TogglePin(LED_PC13_GPIO_Port, LED_PC13_Pin);
         upCnt++;
 
-        
         strcpy(serial_msg, "upTime in seconds: ");
         num2str(upCnt, num_str);
         strcat(serial_msg, num_str);
         strcat(serial_msg, "\n\r");
         
         serial_msg_len = strlen(serial_msg);
-        HAL_UART_Transmit_IT(&huart1, serial_msg, serial_msg_len);
+        //HAL_UART_Transmit_IT(&huart1, serial_msg, serial_msg_len);
+        Serial.write(&serial_0_desc, serial_msg, serial_msg_len);
+        // Serial.print(&serial_0_desc, "test_serial #1\n\r");
+        // Serial.print(&serial_0_desc, "test_serial #1\n\r");
+        // Serial.print(&serial_0_desc, "test_serial #2\n\r");
+        
+        Serial.println(&serial_0_desc, "test_serial #1\r");
+        Serial.println(&serial_0_desc, "test_serial #2\r");
+        Serial.println(&serial_0_desc, "test_serial #3\r");
+
     } 
 
     /* USER CODE BEGIN 3 */
