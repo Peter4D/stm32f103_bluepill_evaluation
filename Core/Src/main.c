@@ -78,12 +78,23 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  static uint32_t task_1_lastTick = 0;
-  static uint32_t upCnt = 0;
+    //=================================================================
+    /* task_1 variables */
+    static uint32_t task_1_lastTick = 0;
+    
+    static uint32_t upCnt = 0;
+    static uint8_t serial_msg[30];
+    static uint8_t num_str[10];
+    static uint8_t serial_msg_len;
+    //=================================================================
+    /* task_2 variables */
+    static uint32_t task_2_lastTick = 0;
+    
+    #define SER_RX_BUFF_SIZE    50
+    static uint8_t serRx_buff[SER_RX_BUFF_SIZE];
+    static uint16_t read_ch_cnt = 0;
 
-  static uint8_t serial_msg[30];
-  static uint8_t num_str[10];
-  static uint8_t serial_msg_len;
+    //=================================================================
 
   /* USER CODE END 1 */
   
@@ -115,6 +126,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   Serial_init(&serial_0_desc, &huart1);
+  Serial.read_enable(&serial_0_desc);
 
   /* USER CODE END 2 */
 
@@ -137,16 +149,26 @@ int main(void)
         serial_msg_len = strlen(serial_msg);
         //HAL_UART_Transmit_IT(&huart1, serial_msg, serial_msg_len);
         Serial.write(&serial_0_desc, serial_msg, serial_msg_len);
+        
         // Serial.print(&serial_0_desc, "test_serial #1\n\r");
         // Serial.print(&serial_0_desc, "test_serial #1\n\r");
         // Serial.print(&serial_0_desc, "test_serial #2\n\r");
         
-        Serial.println(&serial_0_desc, "test_serial #1\r");
-        Serial.println(&serial_0_desc, "test_serial #2\r");
-        Serial.println(&serial_0_desc, "test_serial #3\r");
+        // Serial.println(&serial_0_desc, "test_serial #1\r");
+        // Serial.println(&serial_0_desc, "test_serial #2\r");
+        // Serial.println(&serial_0_desc, "test_serial #3\r");
 
     } 
 
+    if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
+        task_2_lastTick = HAL_GetTick();
+
+        while(Serial.isData(&serial_0_desc) > 0){
+            read_ch_cnt = Serial.read(&serial_0_desc, serRx_buff, 1);
+            Serial.write(&serial_0_desc, serRx_buff, read_ch_cnt);
+            Serial.print(&serial_0_desc, "\r\n");
+        }
+    }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

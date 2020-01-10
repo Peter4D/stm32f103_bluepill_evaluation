@@ -28,21 +28,19 @@ typedef struct _serial_ctrl_desc_t{
     ringBuff_data_t     *p_data_Tx;
     ringBuff_t          *p_xBuff_Rx;
     ringBuff_data_t     *p_data_Rx;
+    uint8_t             byteTemp_Rx;
+    uint8_t             Rx_active_F;
     uint8_t             bussy_F;
 }serial_ctrl_desc_t;
 
 typedef struct _Serial_methods_t{
     // public
-    
-    // int16_t (*readByte)     (void);
-    // uint8_t (*readAll)      (uint8_t *destStr);
-    // void    (*flush)        (void);
-    // void    (*writeByte)    (uint8_t byte);
-
     void     (*write)        (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pSurce, size_t size);
     void     (*print)        (serial_ctrl_desc_t *p_ctrl_desc, const uint8_t * const pStr); // writes until \0
     void     (*println)      (serial_ctrl_desc_t *p_ctrl_desc, const uint8_t * const pStr); // writes until \0
-    uint8_t  (*read)         (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pDest, uint8_t nBytes);
+    void     (*read_enable)  (serial_ctrl_desc_t *p_ctrl_desc);
+    uint16_t (*read)         (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pDest, uint8_t nBytes);
+    uint16_t (*readUntil)    (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pDest, uint8_t nBytes, uint8_t terminate_chr);
     uint16_t (*isData)       (serial_ctrl_desc_t *p_ctrl_desc);
     void     (*flush)        (serial_ctrl_desc_t *p_ctrl_desc);
 
