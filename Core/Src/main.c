@@ -30,7 +30,8 @@
 #include <string.h>
 #include "num_str_convert.h"
 
-#include "Serial.h"
+//#include "Serial.h"
+#include "Serial_test.h"
 
 /* USER CODE END Includes */
 
@@ -63,12 +64,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-// static ringBuff_t ringBuffer_test;
-// static uint8_t buffer_data[32]; // size need to be power of 2
-
-/* #debug */
-// static uint8_t x = 0;
-
 /* USER CODE END 0 */
 
 /**
@@ -78,25 +73,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-    //=================================================================
-    /* task_1 variables */
-    static uint32_t task_1_lastTick = 0;
     
-    static uint32_t upCnt = 0;
-    static uint8_t serial_msg[30];
-    static uint8_t num_str[10];
-    static uint8_t serial_msg_len;
-    //=================================================================
-    /* task_2 variables */
-    static uint32_t task_2_lastTick = 0;
-    
-    #define SER_RX_BUFF_SIZE    50
-    static uint8_t serRx_buff[SER_RX_BUFF_SIZE];
-    static uint16_t read_ch_cnt = 0;
-    
-
-    //=================================================================
-
   /* USER CODE END 1 */
   
 
@@ -126,8 +103,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  Serial_init(&serial_0, &huart1);
-  Serial.read_enable(&serial_0);
+
+    serial_test_init();
 
   /* USER CODE END 2 */
 
@@ -136,47 +113,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    if( (HAL_GetTick() - task_1_lastTick) > TASK_1_PER) {
-        task_1_lastTick = HAL_GetTick();
 
-        HAL_GPIO_TogglePin(LED_PC13_GPIO_Port, LED_PC13_Pin);
-        upCnt++;
+    serial_test_exe();
 
-        strcpy(serial_msg, "upTime in seconds: ");
-        num2str(upCnt, num_str);
-        strcat(serial_msg, num_str);
-        strcat(serial_msg, "\n\r");
-        
-        serial_msg_len = strlen(serial_msg);
-        //HAL_UART_Transmit_IT(&huart1, serial_msg, serial_msg_len);
-        Serial.write(&serial_0, serial_msg, serial_msg_len);
-        
-        // Serial.print(&serial_0, "test_serial #1\n\r");
-        // Serial.print(&serial_0, "test_serial #1\n\r");
-        // Serial.print(&serial_0, "test_serial #2\n\r");
-        
-        // Serial.println(&serial_0, "test_serial #1\r");
-        // Serial.println(&serial_0, "test_serial #2\r");
-        // Serial.println(&serial_0, "test_serial #3\r");
-
-    } 
-
-    
-    if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
-        uint8_t serial_Rx_size = 0;
-
-        serial_Rx_size = Serial.isData(&serial_0); 
-        if( serial_Rx_size > 0 && (HAL_GetTick() - Serial.Rx_lastTime(&serial_0) > 5) ) {
-            /* read all */
-            //Serial.read(&serial_0, serRx_buff, serial_Rx_size);
-            serial_Rx_size = Serial.readUntil(&serial_0, serRx_buff, SER_RX_BUFF_SIZE, '\r');
-
-            Serial.write(&serial_0, serRx_buff, serial_Rx_size);
-            Serial.print(&serial_0, "\r\n");
-        }
-
-        task_2_lastTick = HAL_GetTick();
-    }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

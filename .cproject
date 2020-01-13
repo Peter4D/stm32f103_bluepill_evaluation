@@ -39,7 +39,8 @@
 							<tool command="arm-atollic-eabi-gcc -c " commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG}${OUTPUT_PREFIX} ${OUTPUT} ${INPUTS}" id="com.atollic.truestudio.exe.debug.toolchain.gcc.1836874447" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
 								<option id="com.atollic.truestudio.gcc.directories.select.330946435" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../Core/Inc"/>
-									<listOptionValue builtIn="false" value="../source"/>
+									<listOptionValue builtIn="false" value="../source/Serial"/>
+									<listOptionValue builtIn="false" value="../source/Serial/test"/>
 									<listOptionValue builtIn="false" value="../extSource/sw_modules/num_str_convert"/>
 									<listOptionValue builtIn="false" value="../extSource/sw_modules/ring_buffer"/>
 									<listOptionValue builtIn="false" value="../extSource/assert_gorenje"/>

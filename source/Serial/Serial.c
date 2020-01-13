@@ -281,7 +281,6 @@ void read_enable(serial_ctrl_desc_t *p_ctrl_desc) {
 }
 
 
-
 uint16_t read(serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pDest, uint8_t nBytes) {
     uint8_t i = 0;
     uint8_t byte_cnt = 0;
