@@ -161,7 +161,6 @@ int main(void)
 
     } 
 
-
     
     if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
         uint8_t serial_Rx_size = 0;

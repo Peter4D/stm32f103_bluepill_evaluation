@@ -215,7 +215,7 @@ void print(serial_ctrl_desc_t *p_ctrl_desc, const uint8_t * const pStr){
         RingBuff.push(p_ctrl_desc->p_xBuff_Tx, pStr[i++]);
     }
         
-    if (p_ctrl_desc->bussy_F == 0)
+    if (p_ctrl_desc->Tx_active_F == 0)
     {
         // initiate send
         byte2send = RingBuff.get(p_ctrl_desc->p_xBuff_Tx);
@@ -224,7 +224,7 @@ void print(serial_ctrl_desc_t *p_ctrl_desc, const uint8_t * const pStr){
         {
             assert(0);
         }
-        p_ctrl_desc->bussy_F = 1;
+        p_ctrl_desc->Tx_active_F = 1;
     }
 }
 
@@ -244,7 +244,7 @@ void write(serial_ctrl_desc_t *p_ctrl_desc, uint8_t *const pSurce, size_t size){
         RingBuff.push(p_ctrl_desc->p_xBuff_Tx, pSurce[i++]);
     }
         
-    if (p_ctrl_desc->bussy_F == 0)
+    if (p_ctrl_desc->Tx_active_F == 0)
     {
         // initiate send
         byte2send = RingBuff.get(p_ctrl_desc->p_xBuff_Tx);
@@ -253,7 +253,7 @@ void write(serial_ctrl_desc_t *p_ctrl_desc, uint8_t *const pSurce, size_t size){
         {
             assert(0);
         }
-        p_ctrl_desc->bussy_F = 1;
+        p_ctrl_desc->Tx_active_F = 1;
     }
 }
 
@@ -354,7 +354,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
         }
     }else {
         /* no more data to send */
-        p_serial->bussy_F = 0;
+        p_serial->Tx_active_F = 0;
     }
 }
 

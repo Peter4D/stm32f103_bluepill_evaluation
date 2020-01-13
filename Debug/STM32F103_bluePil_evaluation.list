@@ -31,11 +31,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  13 .debug_line   00003dc8  00000000  00000000  0002b378  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_str    0000259b  00000000  00000000  0002f140  2**0
+ 14 .debug_str    0000259f  00000000  00000000  0002f140  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .comment      0000007c  00000000  00000000  000316db  2**0
+ 15 .comment      0000007c  00000000  00000000  000316df  2**0
                   CONTENTS, READONLY
- 16 .debug_frame  00001bc8  00000000  00000000  00031758  2**2
+ 16 .debug_frame  00001bc8  00000000  00000000  0003175c  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -276,9 +276,9 @@ int main(void)
  8000284:	4923      	ldr	r1, [pc, #140]	; (8000314 <main+0x138>)
  8000286:	481e      	ldr	r0, [pc, #120]	; (8000300 <main+0x124>)
  8000288:	4798      	blx	r3
+        // Serial.println(&serial_0, "test_serial #3\r");
 
     } 
-
 
     
     if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
@@ -5646,7 +5646,7 @@ void print(serial_ctrl_desc_t *p_ctrl_desc, const uint8_t * const pStr){
  8001fd2:	d1ed      	bne.n	8001fb0 <print+0x10>
     }
         
-    if (p_ctrl_desc->bussy_F == 0)
+    if (p_ctrl_desc->Tx_active_F == 0)
  8001fd4:	687b      	ldr	r3, [r7, #4]
  8001fd6:	7d9b      	ldrb	r3, [r3, #22]
  8001fd8:	2b00      	cmp	r3, #0
@@ -5686,7 +5686,7 @@ void print(serial_ctrl_desc_t *p_ctrl_desc, const uint8_t * const pStr){
  8002010:	4807      	ldr	r0, [pc, #28]	; (8002030 <print+0x90>)
  8002012:	f7ff fe5d 	bl	8001cd0 <assert_failed>
         }
-        p_ctrl_desc->bussy_F = 1;
+        p_ctrl_desc->Tx_active_F = 1;
  8002016:	687b      	ldr	r3, [r7, #4]
  8002018:	2201      	movs	r2, #1
  800201a:	759a      	strb	r2, [r3, #22]
@@ -5764,7 +5764,7 @@ void write(serial_ctrl_desc_t *p_ctrl_desc, uint8_t *const pSurce, size_t size){
  800208c:	d3ef      	bcc.n	800206e <write+0x12>
     }
         
-    if (p_ctrl_desc->bussy_F == 0)
+    if (p_ctrl_desc->Tx_active_F == 0)
  800208e:	68fb      	ldr	r3, [r7, #12]
  8002090:	7d9b      	ldrb	r3, [r3, #22]
  8002092:	2b00      	cmp	r3, #0
@@ -5804,7 +5804,7 @@ void write(serial_ctrl_desc_t *p_ctrl_desc, uint8_t *const pSurce, size_t size){
  80020ca:	4808      	ldr	r0, [pc, #32]	; (80020ec <write+0x90>)
  80020cc:	f7ff fe00 	bl	8001cd0 <assert_failed>
         }
-        p_ctrl_desc->bussy_F = 1;
+        p_ctrl_desc->Tx_active_F = 1;
  80020d0:	68fb      	ldr	r3, [r7, #12]
  80020d2:	2201      	movs	r2, #1
  80020d4:	759a      	strb	r2, [r3, #22]
@@ -6170,11 +6170,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
         }
     }else {
         /* no more data to send */
-        p_serial->bussy_F = 0;
+        p_serial->Tx_active_F = 0;
     }
 }
  80022ec:	e002      	b.n	80022f4 <HAL_UART_TxCpltCallback+0x7c>
-        p_serial->bussy_F = 0;
+        p_serial->Tx_active_F = 0;
  80022ee:	68fb      	ldr	r3, [r7, #12]
  80022f0:	2200      	movs	r2, #0
  80022f2:	759a      	strb	r2, [r3, #22]

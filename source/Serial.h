@@ -35,7 +35,7 @@ typedef struct _serial_ctrl_desc_t{
     ringBuff_data_t     *p_data_Rx;  // pointer to data buffer Rx
     uint8_t             byteTemp_Rx; // received byte is first saved here and then pushed to buffer
     uint8_t             Rx_active_F; // flag that set if Rx is active or not
-    uint8_t             bussy_F;     // flag that set if Tx is active or not
+    uint8_t             Tx_active_F; // flag that set if Tx is active or not
     uint32_t            last_tm;     // last time that character was received
 }serial_ctrl_desc_t;
 
