@@ -93,6 +93,7 @@ int main(void)
     #define SER_RX_BUFF_SIZE    50
     static uint8_t serRx_buff[SER_RX_BUFF_SIZE];
     static uint16_t read_ch_cnt = 0;
+    
 
     //=================================================================
 
@@ -160,14 +161,26 @@ int main(void)
 
     } 
 
-    if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
-        task_2_lastTick = HAL_GetTick();
 
-        while(Serial.isData(&serial_0_desc) > 0){
-            read_ch_cnt = Serial.read(&serial_0_desc, serRx_buff, 1);
-            Serial.write(&serial_0_desc, serRx_buff, read_ch_cnt);
+    
+    if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
+        uint8_t serial_Rx_size = 0;
+
+        serial_Rx_size = Serial.isData(&serial_0_desc); 
+        if( serial_Rx_size > 0 && (HAL_GetTick() - Serial.Rx_lastTime(&serial_0_desc) > 5) ) {
+            /* read all */
+            Serial.read(&serial_0_desc, serRx_buff, serial_Rx_size);
+            Serial.write(&serial_0_desc, serRx_buff, serial_Rx_size);
             Serial.print(&serial_0_desc, "\r\n");
         }
+
+        // while(Serial.isData(&serial_0_desc) > 0){
+        //     read_ch_cnt = Serial.read(&serial_0_desc, serRx_buff, 1);
+        //     Serial.write(&serial_0_desc, serRx_buff, read_ch_cnt);
+        //     Serial.print(&serial_0_desc, "\r\n");
+        // }
+
+        task_2_lastTick = HAL_GetTick();
     }
     /* USER CODE BEGIN 3 */
   }

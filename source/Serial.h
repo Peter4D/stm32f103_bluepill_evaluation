@@ -31,6 +31,7 @@ typedef struct _serial_ctrl_desc_t{
     uint8_t             byteTemp_Rx;
     uint8_t             Rx_active_F;
     uint8_t             bussy_F;
+    uint32_t            last_tm; // last time that receive was active Can be used to determine when transmission was finished
 }serial_ctrl_desc_t;
 
 typedef struct _Serial_methods_t{
@@ -43,6 +44,7 @@ typedef struct _Serial_methods_t{
     uint16_t (*readUntil)    (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pDest, uint8_t nBytes, uint8_t terminate_chr);
     uint16_t (*isData)       (serial_ctrl_desc_t *p_ctrl_desc);
     void     (*flush)        (serial_ctrl_desc_t *p_ctrl_desc);
+    uint32_t (*Rx_lastTime)  (serial_ctrl_desc_t *p_ctrl_desc);
 
 }Serial_methods_t;
 

@@ -34,6 +34,7 @@ uint16_t    read        (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *const pDest, 
 uint16_t    readUntil   (serial_ctrl_desc_t *p_ctrl_desc, uint8_t *pDest, uint8_t nBytes, uint8_t terminate_chr);
 uint16_t    isData      (serial_ctrl_desc_t *p_ctrl_desc);
 void        flush       (serial_ctrl_desc_t *p_ctrl_desc);
+uint32_t    Rx_lastTime (serial_ctrl_desc_t *p_ctrl_desc);
 
 void not_implemented(void);
 
@@ -54,6 +55,7 @@ static HAL_StatusTypeDef HAL_status;
         &buff_0_Tx,
         &xBuff_0_Rx,
         &buff_0_Rx,
+        0,
         0,
         0,
         0
@@ -109,7 +111,8 @@ Serial_methods_t Serial = {
     &read,
     &readUntil,
     &isData,
-    &flush
+    &flush,
+    &Rx_lastTime
 };
 
 void Serial_init(serial_ctrl_desc_t *p_Serial_ctrl_desc, void *p_HW_handle) {
@@ -185,6 +188,10 @@ uint16_t isData (serial_ctrl_desc_t *p_ctrl_desc) {
 
 void flush(serial_ctrl_desc_t *p_ctrl_desc) {
     RingBuff.flush(p_ctrl_desc->p_xBuff_Rx);
+}
+
+uint32_t Rx_lastTime(serial_ctrl_desc_t *p_ctrl_desc){
+    return p_ctrl_desc->last_tm;
 }
 
 void read_enable(serial_ctrl_desc_t *p_ctrl_desc) {
@@ -294,6 +301,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     assert(p_serial != NULL);
     /* save received byte into ringBuffer */
     RingBuff.push(p_serial->p_xBuff_Rx, p_serial->byteTemp_Rx);
+
+    serial_0_desc.last_tm = HAL_GetTick();
 
     /* reenable Rx */
     HAL_UART_Receive_IT(p_serial->p_uartHW, &p_serial->byteTemp_Rx, 1);
