@@ -126,8 +126,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  Serial_init(&serial_0_desc, &huart1);
-  Serial.read_enable(&serial_0_desc);
+  Serial_init(&serial_0, &huart1);
+  Serial.read_enable(&serial_0);
 
   /* USER CODE END 2 */
 
@@ -149,15 +149,15 @@ int main(void)
         
         serial_msg_len = strlen(serial_msg);
         //HAL_UART_Transmit_IT(&huart1, serial_msg, serial_msg_len);
-        Serial.write(&serial_0_desc, serial_msg, serial_msg_len);
+        Serial.write(&serial_0, serial_msg, serial_msg_len);
         
-        // Serial.print(&serial_0_desc, "test_serial #1\n\r");
-        // Serial.print(&serial_0_desc, "test_serial #1\n\r");
-        // Serial.print(&serial_0_desc, "test_serial #2\n\r");
+        // Serial.print(&serial_0, "test_serial #1\n\r");
+        // Serial.print(&serial_0, "test_serial #1\n\r");
+        // Serial.print(&serial_0, "test_serial #2\n\r");
         
-        // Serial.println(&serial_0_desc, "test_serial #1\r");
-        // Serial.println(&serial_0_desc, "test_serial #2\r");
-        // Serial.println(&serial_0_desc, "test_serial #3\r");
+        // Serial.println(&serial_0, "test_serial #1\r");
+        // Serial.println(&serial_0, "test_serial #2\r");
+        // Serial.println(&serial_0, "test_serial #3\r");
 
     } 
 
@@ -166,19 +166,15 @@ int main(void)
     if( (HAL_GetTick() - task_2_lastTick) > TASK_2_PER) {
         uint8_t serial_Rx_size = 0;
 
-        serial_Rx_size = Serial.isData(&serial_0_desc); 
-        if( serial_Rx_size > 0 && (HAL_GetTick() - Serial.Rx_lastTime(&serial_0_desc) > 5) ) {
+        serial_Rx_size = Serial.isData(&serial_0); 
+        if( serial_Rx_size > 0 && (HAL_GetTick() - Serial.Rx_lastTime(&serial_0) > 5) ) {
             /* read all */
-            Serial.read(&serial_0_desc, serRx_buff, serial_Rx_size);
-            Serial.write(&serial_0_desc, serRx_buff, serial_Rx_size);
-            Serial.print(&serial_0_desc, "\r\n");
-        }
+            //Serial.read(&serial_0, serRx_buff, serial_Rx_size);
+            serial_Rx_size = Serial.readUntil(&serial_0, serRx_buff, SER_RX_BUFF_SIZE, '\r');
 
-        // while(Serial.isData(&serial_0_desc) > 0){
-        //     read_ch_cnt = Serial.read(&serial_0_desc, serRx_buff, 1);
-        //     Serial.write(&serial_0_desc, serRx_buff, read_ch_cnt);
-        //     Serial.print(&serial_0_desc, "\r\n");
-        // }
+            Serial.write(&serial_0, serRx_buff, serial_Rx_size);
+            Serial.print(&serial_0, "\r\n");
+        }
 
         task_2_lastTick = HAL_GetTick();
     }
