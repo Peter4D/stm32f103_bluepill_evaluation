@@ -12,16 +12,17 @@
 
 
 static void Test_task_upTime(void);
-static void Test_task_reflectMsg(void);
+static void Test_task_loopBack_msg(void);
 
 void serial_test_init(void){
     Serial_init(&serial_0, &huart1);
     Serial.read_enable(&serial_0);
 }
 
+
 void serial_test_exe(void) {
     Test_task_upTime();
-    Test_task_reflectMsg();
+    Test_task_loopBack_msg();
 }
 
 
@@ -47,7 +48,7 @@ static void Test_task_upTime(void) {
 }
 
 #define SER_RX_BUFF_SIZE    50
-static void Test_task_reflectMsg(void) {
+static void Test_task_loopBack_msg(void) {
     static uint32_t task_2_lastTick = 0;
     static uint8_t serRx_buff[SER_RX_BUFF_SIZE];
     static uint16_t read_ch_cnt = 0;
